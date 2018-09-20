@@ -105,10 +105,30 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-void CCondLock::wait()
+int CCondLock::wait()
 {
-	pthread_cond_wait(&m_cond, &(m_clsMutex->m_mutex));
+	return pthread_cond_wait(&m_cond, &(m_clsMutex->m_mutex));
 }
+
+/********************************************************
+   Func Name: timedwait
+Date Created: 2018-7-5
+ Description: 超时条件等待
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
+int CCondLock::timedwait(long sec, long nsec)
+{
+	struct timespec ts;
+	ts.tv_sec = sec;
+	ts.tv_nsec = nsec;
+
+	return pthread_cond_timedwait(&m_cond, &(m_clsMutex->m_mutex), &ts);
+
+}
+
 
 /********************************************************
    Func Name: signal
@@ -119,9 +139,9 @@ Date Created: 2018-7-5
       Return: 
      Caution: 
 *********************************************************/
-void CCondLock::signal()
+int CCondLock::signal()
 {
-	pthread_cond_signal(&m_cond);
+	return pthread_cond_signal(&m_cond);
 }
 
 /********************************************************

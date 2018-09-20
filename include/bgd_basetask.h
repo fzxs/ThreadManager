@@ -16,6 +16,12 @@ public:
 	//用户业务处理方法
 	virtual THR_FUNC_RETURN srv(void);
 
+	//激活任务
+	virtual int activate(int flag,int nThreads = 1,void *stack[] = 0,size_t stack_size[] = 0);
+
+	//等待线程执行结束
+	void wait();
+
 public:
 
 	//函数指针运行方法--非static无法当做函数指针传递
@@ -23,7 +29,6 @@ public:
 
 	//获取线程管理器
 	CThreadManager *getThreadManager(void);
-
 
 protected:
 	CThreadManager *m_thrMgr;             //线程管理器指针

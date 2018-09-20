@@ -32,10 +32,13 @@ public:
 
 public:
 	//条件等待
-	void wait();
+	int wait();
+
+	//条件等待
+	int timedwait(long sec, long nsec = 0);
 
 	//发送信号
-	void signal();
+	int signal();
 
 private:
 	pthread_cond_t m_cond;
