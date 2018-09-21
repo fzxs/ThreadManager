@@ -101,11 +101,23 @@ int CThreadManager::spawn_n(int n_threads, int flag, void *stack[], size_t stack
 
 	for (i = 0; i < n_threads; i++)
 	{
-		result = spawn_i(flag, stack[i], stack_size[i], userFunc, task);
-		if (result)
+		if (NULL == stack)
 		{
-			break;
+			result = spawn_i(flag, NULL, 0, userFunc, task);
+			if (result)
+			{
+				break;
+			}
 		}
+		else
+		{
+			result = spawn_i(flag, stack[i], stack_size[i], userFunc, task);
+			if (result)
+			{
+				break;
+			}
+		}
+		
 	}
 
 	return result;
