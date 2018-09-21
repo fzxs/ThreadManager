@@ -79,6 +79,7 @@ CCondLock::CCondLock(CMutexLock * pclsMutex):m_clsMutex(pclsMutex)
 {
 	pthread_condattr_t *cond_attr = NULL;
 	pthread_cond_init(&m_cond, cond_attr);
+	m_signalWait = false;
 }
 
 /********************************************************
@@ -92,7 +93,6 @@ Date Created: 2018-7-5
 *********************************************************/
 CCondLock::~CCondLock()
 {
-
 	pthread_cond_destroy(&m_cond);
 }
 
@@ -107,7 +107,15 @@ Date Created: 2018-7-5
 *********************************************************/
 int CCondLock::wait()
 {
-	return pthread_cond_wait(&m_cond, &(m_clsMutex->m_mutex));
+	int result = 0;
+	//因为wait需要加锁，所以不需要担心设置完m_signalWait会立刻发送信号
+	if (!m_signalWait)
+	{
+		m_signalWait = true;
+	}
+	result = pthread_cond_wait(&m_cond, &(m_clsMutex->m_mutex));
+
+	return result;
 }
 
 /********************************************************
@@ -122,13 +130,20 @@ Date Created: 2018-7-5
 int CCondLock::timedwait(long sec, long nsec)
 {
 	struct timespec ts;
+	int result = 0;
+
 	ts.tv_sec = sec;
 	ts.tv_nsec = nsec;
 
-	return pthread_cond_timedwait(&m_cond, &(m_clsMutex->m_mutex), &ts);
+	if (!m_signalWait)
+	{
+		m_signalWait = true;
+	}
+	result = pthread_cond_timedwait(&m_cond, &(m_clsMutex->m_mutex), &ts);
+
+	return result;
 
 }
-
 
 /********************************************************
    Func Name: signal
@@ -141,7 +156,30 @@ Date Created: 2018-7-5
 *********************************************************/
 int CCondLock::signal()
 {
-	return pthread_cond_signal(&m_cond);
+	int result = 0;
+
+	//防止信号丢失
+	if (!m_signalWait)
+	{
+		return -1;
+	}
+	result = pthread_cond_signal(&m_cond);
+
+	return result;
+}
+
+/********************************************************
+   Func Name: broadcast
+Date Created: 2018-9-21
+ Description: 广播信号
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
+int CCondLock::broadcast()
+{
+	return pthread_cond_broadcast(&m_cond);
 }
 
 /********************************************************

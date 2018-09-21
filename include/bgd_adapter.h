@@ -4,6 +4,7 @@
 #define __BGD_ADAPTER_H_
 
 #include "bgd_common.h"
+#include <stdlib.h>
 
 extern "C"
 {
@@ -14,7 +15,18 @@ extern "C"
 class CBaseThreadAdapter
 {
 public:
-	CBaseThreadAdapter(FuncUser userFunc, FuncEntrance entryPoint,void *arg) :m_userFunc(userFunc), m_entryPoint(entryPoint),m_arg(arg) {}
+	CBaseThreadAdapter(int flag
+		, void *stack
+		, size_t stack_size
+		, FuncUser userFunc
+		, FuncEntrance entryPoint
+		, void *arg) 
+		:m_flag(flag)
+		, m_stack(stack)
+		, m_stackSize(stack_size)
+		, m_userFunc(userFunc)
+		, m_entryPoint(entryPoint)
+		, m_arg(arg) {}
 	virtual ~CBaseThreadAdapter() {}
 
 public:
@@ -25,9 +37,13 @@ public:
 	FuncEntrance entryPoint();
 
 protected:
-	FuncUser m_userFunc;                  //用户函数
-	FuncEntrance m_entryPoint;            //入口函数
+	int m_flag;                             //线程属性参数
+	void *m_stack;                          //线程栈设置
+	size_t m_stackSize;                     //线程栈大小设置
+	FuncUser m_userFunc;                    //用户函数
+	FuncEntrance m_entryPoint;              //入口函数
 	void *m_arg;                            //任务实体对象
+	
 };
 
 /* 适配器类 */
@@ -35,13 +51,25 @@ class CThreadAdapter:public CBaseThreadAdapter
 {
 public:
 
-	CThreadAdapter(FuncUser userFunc, FuncEntrance entryPoint, void *arg) :CBaseThreadAdapter(userFunc,entryPoint,arg) {}
+	CThreadAdapter(int flag
+		, void *stack
+		, size_t stack_size
+		, FuncUser userFunc
+		, FuncEntrance entryPoint
+		, void *arg
+	)
+		:CBaseThreadAdapter
+		(
+			flag
+			, stack
+			, stack_size
+			, userFunc
+			, entryPoint
+			, arg) {}
 	virtual ~CThreadAdapter() {}
 public:
 
 	virtual THR_FUNC_RETURN invoke(void);
-
-private:
 
 };
 

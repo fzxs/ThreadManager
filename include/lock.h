@@ -40,9 +40,13 @@ public:
 	//发送信号
 	int signal();
 
+	//广播信号
+	int broadcast();
+
 private:
 	pthread_cond_t m_cond;
 	CMutexLock * m_clsMutex;
+	bool m_signalWait;
 };
 
 

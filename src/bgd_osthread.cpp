@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-int BGD_OS::ThreadCreate(bgd_thread_t *pstThreadId, void *stack, size_t stacksize, CBaseThreadAdapter *pclsThreadAdapter)
+
+int BGD_OS::ThreadSpawn(bgd_thread_t *pstThreadId, CBaseThreadAdapter *pclsThreadAdapter)
 {
 	int iRet = 0;
 
@@ -32,9 +33,14 @@ bgd_thread_t BGD_OS::ThreadSelf()
 	return pthread_self();
 }
 
-int BGD_OS::ThreadCancel(bgd_thread_t waiterId)
+int BGD_OS::ThreadCancel(bgd_thread_t threadId)
 {
-	return pthread_cancel(waiterId);
+	return pthread_cancel(threadId);
+}
+
+void BGD_OS::ThreadExit()
+{
+	pthread_exit(NULL);
 }
 
 

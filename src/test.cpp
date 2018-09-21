@@ -31,7 +31,7 @@ void test()
 	//1.定义一个调度器
 	CScheduler scheduler(20);
 	//激活调度器
-	scheduler.activate(1, 10);
+	scheduler.activate(THR_JOINING, 10);
 	//3.定义结果存储
 	CFuture<int> future;
 	//4.定义方法对象

@@ -14,11 +14,20 @@
 
 namespace BGD_OS
 {
-	extern int ThreadCreate(bgd_thread_t *pstThreadId, void *stack, size_t stacksize
-		, CBaseThreadAdapter *pclsThreadAdapter);
+	//分配线程
+	extern int ThreadSpawn(bgd_thread_t *pstThreadId, CBaseThreadAdapter *pclsThreadAdapter);
+
+	//等待线程
 	extern int ThreadJoin(bgd_thread_t waiterId);
+
+	//获取线程ID
 	extern bgd_thread_t ThreadSelf();
-	extern int ThreadCancel(bgd_thread_t waiterId);
+
+	//取消线程
+	extern int ThreadCancel(bgd_thread_t threadId);
+
+	//线程退出
+	extern void ThreadExit();
 }
 
 #endif

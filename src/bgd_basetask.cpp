@@ -49,7 +49,6 @@ THR_FUNC_RETURN AbsTaskBase::srvRun(void *arg)
 {
 	AbsTaskBase *base = NULL;
 	THR_FUNC_RETURN status = 0;
-	CThreadManager *pclsThrMgr = NULL;
 
 	if (NULL == arg)
 	{
@@ -57,9 +56,9 @@ THR_FUNC_RETURN AbsTaskBase::srvRun(void *arg)
 	}
 	base = (AbsTaskBase *)arg;
 	status = base->srv();
-	//退出当前线程
-	pclsThrMgr = base->getThreadManager();
-	pclsThrMgr->atExit(NULL, NULL, NULL);
+	////退出当前线程
+	//pclsThrMgr = base->getThreadManager();
+	//pclsThrMgr->atExit();
 
 	return status;
 }
@@ -100,7 +99,7 @@ int AbsTaskBase::activate(int flag, int nThreads, void *stack[], size_t stack_si
 		m_thrMgr = CThreadManager::instance();
 	}
 	//创建线程
-	result = m_thrMgr->spawn_n(nThreads, AbsTaskBase::srvRun, (void *)this);
+	result = m_thrMgr->spawn_n(nThreads, flag, stack, stack_size, AbsTaskBase::srvRun, (void *)this);
 
 	return result;
 }

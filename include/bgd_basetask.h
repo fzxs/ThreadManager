@@ -5,6 +5,7 @@
 
 #include "bgd_common.h"
 #include "bgd_threadmgr.h"
+#include "bgd_descript.h"
 
 
 class AbsTaskBase
@@ -17,10 +18,7 @@ public:
 	virtual THR_FUNC_RETURN srv(void);
 
 	//激活任务
-	virtual int activate(int flag,int nThreads = 1,void *stack[] = 0,size_t stack_size[] = 0);
-
-	//等待线程执行结束
-	void wait();
+	virtual int activate(int flag = THR_JOINING,int nThreads = 1,void *stack[] = 0,size_t stack_size[] = 0);
 
 public:
 
