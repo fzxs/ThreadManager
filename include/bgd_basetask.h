@@ -18,7 +18,7 @@ public:
 	virtual THR_FUNC_RETURN srv(void);
 
 	//º§ªÓ»ŒŒÒ
-	virtual int activate(int flag = THR_JOINING,int nThreads = 1,void *stack[] = 0,size_t stack_size[] = 0);
+	virtual int activate(int nThreads = 1, int flag = THR_JOINING, void *stack[] = 0, size_t stack_size[] = 0);
 
 public:
 

@@ -7,13 +7,14 @@
 #include "bgd_msgqueue.h"
 
 #define INCREASE_INTERVAL 10   //线程递增步长
+#define DEFAULT_QUEUE 50        //默认消息队列长度
 
 /* 调度器 */
 
 class CScheduler:public AbsTaskBase
 {
 public:
-	CScheduler(size_t nSize);
+	CScheduler(size_t nSize = DEFAULT_QUEUE);
 	~CScheduler();
 public:
 	//执行任务队列

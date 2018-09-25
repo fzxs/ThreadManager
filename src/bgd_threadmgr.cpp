@@ -371,6 +371,12 @@ void CThreadManager::wait()
 		//加锁保护
 		m_mutex->lock();
 
+		//判断当前线程数量如果为0，退出线程池
+		if (0 == m_threadPool.size())
+		{
+			break;
+		}
+
 		//等待信号
 		m_joinCond->wait();
 

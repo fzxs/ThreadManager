@@ -10,6 +10,8 @@ CScheduler::CScheduler(size_t nSize)
 
 CScheduler::~CScheduler()
 {
+	delete m_queue;
+	m_queue = NULL;
 }
 
 THR_FUNC_RETURN CScheduler::srv(void)
@@ -77,7 +79,7 @@ int CScheduler::addRequest(AbsMethodRequest * request)
 	if (m_queue->isFull())
 	{
 		printf("request queue is full , and i activate thread .\n");
-		activate(1, INCREASE_INTERVAL);
+		activate(INCREASE_INTERVAL);
 	}
 	result = m_queue->enqueue(request);
 

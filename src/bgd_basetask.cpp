@@ -91,7 +91,7 @@ Date Created: 2018-9-18
       Return: 
      Caution: 
 *********************************************************/
-int AbsTaskBase::activate(int flag, int nThreads, void *stack[], size_t stack_size[])
+int AbsTaskBase::activate(int nThreads, int flag, void *stack[], size_t stack_size[])
 {
 	int result = 0;
 	if (NULL == m_thrMgr)
