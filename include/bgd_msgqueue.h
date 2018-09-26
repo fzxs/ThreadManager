@@ -156,7 +156,8 @@ int CMsgQueue<T>::waitNotEmpty(long timeout)
 		else
 		{
 			//超时等待是需要退出的，非超时则不需要，因为用户希望永久等待
-			if (m_emptyCond->timedwait(timeout))
+			result = m_emptyCond->timedwait(timeout);
+			if (result)
 			{
 				result = -1;
 				break;

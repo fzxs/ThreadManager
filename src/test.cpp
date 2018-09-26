@@ -1,57 +1,86 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <vector>
 
 #include "bgd_scheduler.h"
 #include "bgd_servant.h"
 #include "bgd_future.h"
+#include "bgd_observer.h"
+#include "bgd_servant.h"
+#include "bgd_proxy.h"
 
 using namespace std;
 
-//2.定义一个执行任务
-class CServant :public AbsServant
+//2.定义一个仆人
+class CServant :public AbsServant<int>
 {
 public:
-	virtual int invoke(void *pvArg);
+	CServant(long arg) :m_arg(arg) {}
+public:
+	virtual int invoke();
+private:
+	long m_arg;
 };
 
-int CServant::invoke(void *pvArg)
+int CServant::invoke()
 {
-	long a = (long)pvArg;
-	sleep(10);
-	printf("a = %ld\n", a);
+	sleep(5);
+	//printf("i am worker ,i recv a = %ld\n", m_arg);
 
-	return 0;
+	return m_arg * 100;
 }
 
-#define NUM 12
+//定义观察者
+class CObserver :public AbsFutureObserver<int>
+{
+public:
+	~CObserver();
+public:
+	void invoke(const int &data);
+};
+
+CObserver::~CObserver()
+{
+	printf("i am observer , i am release .\n");
+}
+
+void CObserver::invoke(const int &data)
+{
+	printf("i am observer , result is [%d]\n", data);
+}
+
+#define NUM 100
+
 
 void test()
 {
-	//1.定义一个调度器
-	CScheduler scheduler(20);
-	//激活调度器
-	scheduler.activate(10);
-	//3.定义结果存储
-	CFuture<int> future;
-	//4.定义方法对象
-	CServant *servant = new CServant();
-	//4.定义一个任务请求
-	CExecRequest<int> *request = NULL;
+	CScheduler scheduler;
+	CProxy<int> proxy(&scheduler);
+	CObserver *observer = NULL;
+	std::vector<CFuture<int> *> futureList;
+	std::vector<CFuture<int> *>::iterator it;
+
 	for (int i = 0; i < NUM; i++)
 	{
 		long k = i + 3;
-		request = new CExecRequest<int>(&future, servant, (void *)k);
-		//将任务请求加入到调度器
-		scheduler.addRequest(request);
+		CServant *servant = new CServant(k);
+		observer = new CObserver();
+		futureList.push_back(proxy.servantRegister(servant, observer));
 	}
 
-	while (true)
+	for (it = futureList.begin(); it != futureList.end(); ++it)
 	{
-		sleep(1000);
+		int k = 0;
+		future = *it;
+		future->get(k);
+		printf("i am get data[%d] and i am [%p]\n", k, future);
+
+		delete future;
 	}
-	//scheduler.wait();
-	printf("1111111\n");
+
+	//线程等待
+	CThreadManager::instance()->wait();
 }
 
 int main()

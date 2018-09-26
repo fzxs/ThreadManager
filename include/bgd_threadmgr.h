@@ -9,6 +9,9 @@
 #include "bgd_descript.h"
 #include "lock.h"
 
+#define MAX_THREAD 50
+#define MIN_THREAD 5
+
 /* 线程管理器类 */
 
 /* 单例模式 */
@@ -20,9 +23,6 @@ public:
 	~CThreadManager() {}
 
 public:
-
-	//初始化
-	int init();
 
 	//设置最大线程数
 	void setMaxThread(size_t n);
@@ -61,6 +61,9 @@ public:
 	void wait();
 
 private:
+	//初始化--暂时没有具体需求
+	int init();
+
 	//创建一个子线程
 	int spawn_i(int flag,void *stack, size_t stack_size, FuncUser userFunc, void *task);
 

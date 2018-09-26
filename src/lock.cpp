@@ -1,6 +1,8 @@
 
 #include "lock.h"
 
+#include <time.h>
+
 /********************************************************
    Func Name: CMutexLock
 Date Created: 2018-7-5
@@ -139,6 +141,12 @@ int CCondLock::timedwait(long sec, long nsec)
 	{
 		m_signalWait = true;
 	}
+	clock_gettime(CLOCK_REALTIME, &ts);
+	/*
+	pthread_cond_timedwait的第三个参数获取的是绝对时间，并非相对时间
+	*/
+	ts.tv_sec += sec;
+	ts.tv_nsec += nsec;
 	result = pthread_cond_timedwait(&m_cond, &(m_clsMutex->m_mutex), &ts);
 
 	return result;

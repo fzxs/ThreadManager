@@ -3,11 +3,16 @@
 #define __BGD_SCHEDULER_H_
 
 #include "bgd_basetask.h"
-#include "bgd_commandrequest.h"
+#include "bgd_methodrequest.h"
 #include "bgd_msgqueue.h"
 
-#define INCREASE_INTERVAL 10   //线程递增步长
-#define DEFAULT_QUEUE 50        //默认消息队列长度
+#define INCREASE_INTERVAL 5           //线程递增步长
+#define DEFAULT_QUEUE 30              //默认消息队列长度
+/*
+这个等待时间很有考究，因为如果线程超时等待，便会退出线程，这个退出的时机必须在线程wait之后执行
+*/
+#define THREAD_QUIT_TIME 10            //等待请求队列队列的时间
+#define ENQUEUE_TIMEOUT 60*5           //请求队列已满，等待时间为5分钟，超过5分钟，任务全部抛弃
 
 /* 调度器 */
 
@@ -20,11 +25,8 @@ public:
 	//执行任务队列
 	virtual THR_FUNC_RETURN srv(void);
 
-	//添加任务
+	//添加请求
 	int addRequest(AbsMethodRequest * request);
-
-	//等待线程执行结束
-	void wait();
 
 private:
 	//禁止拷贝构造函数

@@ -56,9 +56,6 @@ THR_FUNC_RETURN AbsTaskBase::srvRun(void *arg)
 	}
 	base = (AbsTaskBase *)arg;
 	status = base->srv();
-	////退出当前线程
-	//pclsThrMgr = base->getThreadManager();
-	//pclsThrMgr->atExit();
 
 	return status;
 }

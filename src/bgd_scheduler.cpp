@@ -3,62 +3,71 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/********************************************************
+CScheduler
+*********************************************************/
+
+/********************************************************
+   Func Name: CScheduler
+Date Created: 2018-9-15
+ Description: 构造函数
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
 CScheduler::CScheduler(size_t nSize)
 {
 	m_queue = new CMsgQueue<AbsMethodRequest *>(nSize);
 }
 
+/********************************************************
+   Func Name: ~CScheduler
+Date Created: 2018-9-15
+ Description: 析构函数
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
 CScheduler::~CScheduler()
 {
 	delete m_queue;
 	m_queue = NULL;
 }
 
+/********************************************************
+   Func Name: srv
+Date Created: 2018-9-15
+ Description: 请求处理函数
+       Input: 
+      Output: 
+      Return: 
+     Caution: 该函数是在子线程中运行
+*********************************************************/
 THR_FUNC_RETURN CScheduler::srv(void)
 {
 	int result = 0;
 	AbsMethodRequest * pclsRequest = NULL;
 	while (true)
 	{
+		//线程状态监测--用来控制线程退出
 		m_thrMgr->checkStatus();
-		//while (true)
-		//{
-		//	//获取队列中的元素
-		//	result = m_queue->dequeue(pclsRequest,3);
-		//	if (result)
-		//	{
-		//		//说明请求任务超时
-		//		//此时说明需要优化线程池，将空闲线程取消
-		//		//退出当前线程
-		//		printf("request queue is empty , and i quit thread .\n");
-		//		if (m_thrMgr->adjustReduce())
-		//		{
-		//			printf("i am alive .\n");
-		//			sleep(10000);
-		//			//此时线程池中的线程已经处于最低状态，不能再退出线程了
-		//			continue;
-		//		}
-		//		return 0;
-		//	}
-		//	//如果获取到任务，退出循环，执行任务
-		//	break;
-		//}
 
 		//获取队列中的元素
-		result = m_queue->dequeue(pclsRequest, 3);
+		result = m_queue->dequeue(pclsRequest, THREAD_QUIT_TIME);
 		if (result)
 		{
 			//说明请求任务超时
 			//此时说明需要优化线程池，将空闲线程取消
-			//退出当前线程
 			printf("request queue is empty , and i quit thread .\n");
 			if (m_thrMgr->adjustReduce())
 			{
 				printf("i am alive .\n");
-				sleep(10000);
 				//此时线程池中的线程已经处于最低状态，不能再退出线程了
 				continue;
 			}
+			//退出当前线程
 			break;
 		}
 		
@@ -72,6 +81,15 @@ THR_FUNC_RETURN CScheduler::srv(void)
 	return 0;
 }
 
+/********************************************************
+   Func Name: addRequest
+Date Created: 2018-9-15
+ Description: 添加请求
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
 int CScheduler::addRequest(AbsMethodRequest * request)
 {
 	int result = 0;
@@ -81,18 +99,10 @@ int CScheduler::addRequest(AbsMethodRequest * request)
 		printf("request queue is full , and i activate thread .\n");
 		activate(INCREASE_INTERVAL);
 	}
+	//当前队列如果已满，那么超时等待时间
 	result = m_queue->enqueue(request);
 
 	return result;
-}
-
-void CScheduler::wait()
-{
-	if (NULL == m_thrMgr)
-	{
-		m_thrMgr = CThreadManager::instance();
-	}
-	m_thrMgr->wait();
 }
 
 

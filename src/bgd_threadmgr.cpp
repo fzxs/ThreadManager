@@ -24,16 +24,35 @@ Date Created: 2018-9-15
 *********************************************************/
 int CThreadManager::init()
 {
-	m_threadMaxNum = 50;
-	m_threadMinNum = 5;
+	//暂时占个位子，并不清楚init()中需要做什么
+	m_threadMaxNum = MAX_THREAD;
+	m_threadMinNum = MIN_THREAD;
 	return 0;
 }
 
+/********************************************************
+   Func Name: setMaxThread
+Date Created: 2018-9-15
+ Description: 设置最大线程数
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
 void CThreadManager::setMaxThread(size_t n)
 {
 	m_threadMaxNum = n;
 }
 
+/********************************************************
+   Func Name: setMinThread
+Date Created: 2018-9-15
+ Description: 设置最小线程数
+       Input: 
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
 void CThreadManager::setMinThread(size_t n)
 {
 	m_threadMinNum = n;
@@ -93,6 +112,7 @@ int CThreadManager::spawn_n(int n_threads, int flag, void *stack[], size_t stack
 	m_mutex->lock();
 	if (m_threadPool.size() + n_threads >= m_threadMaxNum)
 	{
+		m_mutex->unlock();
 		return -1;
 	}
 	m_mutex->unlock();
@@ -287,6 +307,7 @@ Date Created: 2018-9-21
 *********************************************************/
 int CThreadManager::removeThr(bgd_thread_t threadId)
 {
+	int result = 0;
 	STThreadDescriptor * pstDescriptor = NULL;
 	std::map<bgd_thread_t, STThreadDescriptor *>::iterator itFind;
 
@@ -309,12 +330,12 @@ int CThreadManager::removeThr(bgd_thread_t threadId)
 	//添加到删除队列中
 	m_threadRemove.push_back(pstDescriptor);
 
-	//发送检测心跳
-	m_joinCond->signal();
+	//发送退出线程信号--该方法不一定成功，如果还没有进入wait就会发送失败，注意
+	result = m_joinCond->signal();
 
 	m_mutex->unlock();
 
-	return 0;
+	return result;
 }
 
 /********************************************************
@@ -363,19 +384,13 @@ void CThreadManager::wait()
 	std::vector<STThreadDescriptor *>::iterator itRemove;
 
 	/*
-	wait()函数必定是在主线程中调用，遇到开启多个线程池的场景，每个线程池都必须wait
+	wait()函数必定是在主线程中调用，不存在开启多个线程池的设定
 	*/
 
 	while (true)
 	{
 		//加锁保护
 		m_mutex->lock();
-
-		//判断当前线程数量如果为0，退出线程池
-		if (0 == m_threadPool.size())
-		{
-			break;
-		}
 
 		//等待信号
 		m_joinCond->wait();
