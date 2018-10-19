@@ -5,9 +5,9 @@
 #include <map>
 #include <vector>
 
-#include "bgd_common.h"
-#include "bgd_descript.h"
-#include "lock.h"
+#include "threadmgr/bgd_common.h"
+#include "threadmgr/bgd_descript.h"
+#include "threadmgr/lock.h"
 
 #define MAX_THREAD 50
 #define MIN_THREAD 5

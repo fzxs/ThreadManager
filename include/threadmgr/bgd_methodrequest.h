@@ -3,8 +3,8 @@
 #ifndef __BGD_METHODREQUEST_H_
 #define __BGD_METHODREQUEST_H_
 
-#include "bgd_future.h"
-#include "bgd_servant.h"
+#include "threadmgr/bgd_future.h"
+#include "threadmgr/bgd_servant.h"
 
 /*√¸¡Ó∑Ω∑®*/
 

@@ -2,9 +2,9 @@
 #ifndef __BGD_PROXY_H_
 #define __BGD_PROXY_H_
 
-#include "bgd_scheduler.h"
-#include "bgd_future.h"
-#include "bgd_methodrequest.h"
+#include "threadmgr/bgd_scheduler.h"
+#include "threadmgr/bgd_future.h"
+#include "threadmgr/bgd_methodrequest.h"
 
 /* ¥˙¿Ì¿‡ */
 

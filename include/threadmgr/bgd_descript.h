@@ -3,8 +3,8 @@
 #ifndef __BGD_DESCRIPT_H_
 #define __BGD_DESCRIPT_H_
 
-#include "bgd_osthread.h"
-#include "common/include/bithelper.h"
+#include "threadmgr/bgd_osthread.h"
+#include "common/bithelper.h"
 
 #include <string>
 

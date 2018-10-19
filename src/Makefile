@@ -12,7 +12,7 @@ SO_LINK=-shared
 S_FLAGS= -fpermissive
 C_FLAGS=  -std=c11
 CXX_FLAGS= -std=c++11
-INC_PATH= -I ../ -I ../include
+INC_PATH= -I ../include
 LIB_PATH=
 EXT_LIB= -lpthread
 

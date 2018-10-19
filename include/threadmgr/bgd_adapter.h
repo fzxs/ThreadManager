@@ -3,7 +3,7 @@
 #ifndef __BGD_ADAPTER_H_
 #define __BGD_ADAPTER_H_
 
-#include "bgd_common.h"
+#include "threadmgr/bgd_common.h"
 #include <stdlib.h>
 
 extern "C"

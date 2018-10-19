@@ -10,7 +10,7 @@
 
 #define bgd_thread_t pthread_t
 
-#include "bgd_adapter.h"
+#include "threadmgr/bgd_adapter.h"
 
 namespace BGD_OS
 {

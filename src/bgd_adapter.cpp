@@ -1,5 +1,5 @@
 
-#include "bgd_adapter.h"
+#include "threadmgr/bgd_adapter.h"
 
 #include <stdlib.h>
 

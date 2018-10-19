@@ -1,5 +1,5 @@
 
-#include "bgd_scheduler.h"
+#include "threadmgr/bgd_scheduler.h"
 #include <stdio.h>
 #include <unistd.h>
 

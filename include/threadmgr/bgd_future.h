@@ -5,8 +5,8 @@
 #include <iostream>
 #include <list>
 
-#include "lock.h"
-#include "bgd_observer.h"
+#include "threadmgr/lock.h"
+#include "threadmgr/bgd_observer.h"
 
 template <class T> class CFuture;
 

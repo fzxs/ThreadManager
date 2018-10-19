@@ -2,9 +2,9 @@
 #ifndef __BGD_SCHEDULER_H_
 #define __BGD_SCHEDULER_H_
 
-#include "bgd_basetask.h"
-#include "bgd_methodrequest.h"
-#include "bgd_msgqueue.h"
+#include "threadmgr/bgd_basetask.h"
+#include "threadmgr/bgd_methodrequest.h"
+#include "threadmgr/bgd_msgqueue.h"
 
 #define INCREASE_INTERVAL 5           //线程递增步长
 #define DEFAULT_QUEUE 30              //默认消息队列长度

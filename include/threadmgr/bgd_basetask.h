@@ -3,10 +3,9 @@
 #ifndef __BGD_BASETASK_H_
 #define __BGD_BASETASK_H_
 
-#include "bgd_common.h"
-#include "bgd_threadmgr.h"
-#include "bgd_descript.h"
-
+#include "threadmgr/bgd_common.h"
+#include "threadmgr/bgd_threadmgr.h"
+#include "threadmgr/bgd_descript.h"
 
 class AbsTaskBase
 {

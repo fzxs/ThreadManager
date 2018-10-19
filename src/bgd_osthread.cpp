@@ -1,5 +1,5 @@
 
-#include "bgd_osthread.h"
+#include "threadmgr/bgd_osthread.h"
 
 #include <stdlib.h>
 #include <pthread.h>

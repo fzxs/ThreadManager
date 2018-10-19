@@ -1,14 +1,16 @@
 
+#ifdef TEST
+
 #include <iostream>
 #include <unistd.h>
 #include <vector>
 
-#include "bgd_scheduler.h"
-#include "bgd_servant.h"
-#include "bgd_future.h"
-#include "bgd_observer.h"
-#include "bgd_servant.h"
-#include "bgd_proxy.h"
+#include "threadmgr/bgd_scheduler.h"
+#include "threadmgr/bgd_servant.h"
+#include "threadmgr/bgd_future.h"
+#include "threadmgr/bgd_observer.h"
+#include "threadmgr/bgd_servant.h"
+#include "threadmgr/bgd_proxy.h"
 
 using namespace std;
 
@@ -72,7 +74,7 @@ void test()
 	for (it = futureList.begin(); it != futureList.end(); ++it)
 	{
 		int k = 0;
-		future = *it;
+		CFuture<int> * future = *it;
 		future->get(k);
 		printf("i am get data[%d] and i am [%p]\n", k, future);
 
@@ -91,7 +93,7 @@ int main()
 }
 
 
-
+#endif
 
 
 
