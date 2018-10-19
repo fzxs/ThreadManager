@@ -6,7 +6,7 @@ CXX=g++
 LINK=g++
 
 #-fpermissive：表示兼容老语法
-COM_FLAGS= -g -Wall -DTEST
+COM_FLAGS= -g -Wall
 SO_FLAGS=-fPIC
 SO_LINK=-shared
 S_FLAGS= -fpermissive
@@ -16,7 +16,7 @@ INC_PATH= -I ../ -I ../include
 LIB_PATH=
 EXT_LIB= -lpthread
 
-PRG=test
+PRG=libthreadmgr.so
 
 SRCS=$(wildcard *.c)
 SRCS+=$(wildcard *.cpp)
@@ -29,14 +29,14 @@ all:$(PRG)
 
 #链接的时候需要库文件
 $(PRG):$(CXX_OBJS) $(C_OBJS)
-	$(CXX) $^ $(LIB_PATH) $(EXT_LIB)  -o $@
+	$(CXX) $^ $(LIB_PATH) $(EXT_LIB) $(SO_LINK) -o $@
 
 #编译的时候需要头文件
 %.o:%.cpp
-	$(CXX) $(COM_FLAGS) $(CXX_FLAGS) -c $< $(INC_PATH) -o $@
+	$(CXX) $(COM_FLAGS) $(CXX_FLAGS) $(SO_FLAGS) -c $< $(INC_PATH) -o $@
 
 %.o:%.c
-	$(CC) $(COM_FLAGS) -c $< $(INC_PATH) -o $@
+	$(CC) $(COM_FLAGS) $(SO_FLAGS) -c $< $(INC_PATH) -o $@
 
 .PRONY:clean
 clean:
