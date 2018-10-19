@@ -4,7 +4,7 @@
 #define __BGD_DESCRIPT_H_
 
 #include "threadmgr/bgd_osthread.h"
-#include "common/bithelper.h"
+#include "threadmgr/bithelper.h"
 
 #include <string>
 
