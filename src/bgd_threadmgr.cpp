@@ -1,6 +1,6 @@
 
 #include "threadmgr/bgd_threadmgr.h"
-#include "common/bithelper.h"
+#include "threadmgr/bithelper.h"
 #include "threadmgr/bgd_osthread.h"
 
 #include <stdlib.h>
