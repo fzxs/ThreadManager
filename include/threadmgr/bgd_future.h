@@ -63,7 +63,7 @@ class CFuture
 {
 public:
 	CFuture();
-	CFuture(const CFuture<T> &r);
+	CFuture(CFuture<T> &r);
 	~CFuture();
 public:
 	//ÉèÖÃÊı¾İ
@@ -406,7 +406,7 @@ Date Created: 2018-9-18
      Caution: 
 *********************************************************/
 template<typename T>
-CFuture<T>::CFuture(const CFuture<T> &r):m_futureRep(CFuture_Rep<T>::refAttach(r.m_futureRep))
+CFuture<T>::CFuture(CFuture<T> &r):m_futureRep(CFuture_Rep<T>::refAttach(r.m_futureRep))
 {
 }
 

@@ -7,7 +7,7 @@
 #include "threadmgr/bgd_msgqueue.h"
 
 #define INCREASE_INTERVAL 5           //线程递增步长
-#define DEFAULT_QUEUE 30              //默认消息队列长度
+#define DEFAULT_QUEUE 50              //默认消息队列长度
 /*
 这个等待时间很有考究，因为如果线程超时等待，便会退出线程，这个退出的时机必须在线程wait之后执行
 */
@@ -16,11 +16,11 @@
 
 /* 调度器 */
 
-class CScheduler:public AbsTaskBase
+class BaseScheduler:public AbsTaskBase
 {
 public:
-	CScheduler(size_t nSize = DEFAULT_QUEUE);
-	~CScheduler();
+	BaseScheduler(size_t nSize = DEFAULT_QUEUE);
+	virtual ~BaseScheduler();
 public:
 	//执行任务队列
 	virtual THR_FUNC_RETURN srv(void);
@@ -30,7 +30,7 @@ public:
 
 private:
 	//禁止拷贝构造函数
-	CScheduler(CScheduler &r) {}
+	BaseScheduler(BaseScheduler &r) {}
 
 private:
 	CMsgQueue<AbsMethodRequest *> *m_queue;

@@ -4,11 +4,11 @@
 #include <unistd.h>
 
 /********************************************************
-CScheduler
+BaseScheduler
 *********************************************************/
 
 /********************************************************
-   Func Name: CScheduler
+   Func Name: BaseScheduler
 Date Created: 2018-9-15
  Description: 构造函数
        Input: 
@@ -16,7 +16,7 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-CScheduler::CScheduler(size_t nSize)
+BaseScheduler::BaseScheduler(size_t nSize)
 {
 	m_queue = new CMsgQueue<AbsMethodRequest *>(nSize);
 }
@@ -30,7 +30,7 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-CScheduler::~CScheduler()
+BaseScheduler::~BaseScheduler()
 {
 	delete m_queue;
 	m_queue = NULL;
@@ -45,7 +45,7 @@ Date Created: 2018-9-15
       Return: 
      Caution: 该函数是在子线程中运行
 *********************************************************/
-THR_FUNC_RETURN CScheduler::srv(void)
+THR_FUNC_RETURN BaseScheduler::srv(void)
 {
 	int result = 0;
 	AbsMethodRequest * pclsRequest = NULL;
@@ -90,7 +90,7 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-int CScheduler::addRequest(AbsMethodRequest * request)
+int BaseScheduler::addRequest(AbsMethodRequest * request)
 {
 	int result = 0;
 	//1.检测任务请求队列的长度，如果达到临界值，需要再次申请更多的线程
