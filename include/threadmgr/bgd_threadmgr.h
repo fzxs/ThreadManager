@@ -33,9 +33,6 @@ public:
 	//获取实例
 	static CThreadManager *instance();
 
-	//等待所有子线程退出
-	//void wait(struct timespec *timeout,bool abandonDetached);
-
 	//创建n个子线程
 	int spawn_n(int n_threads, int flag, void *stack[], size_t stack_size[], FuncUser userFunc, void *task);
 

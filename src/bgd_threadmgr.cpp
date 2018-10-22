@@ -410,12 +410,3 @@ void CThreadManager::wait()
 	}
 }
 
-
-
-
-
-
-
-
-
-

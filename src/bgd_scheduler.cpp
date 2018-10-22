@@ -16,9 +16,13 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-BaseScheduler::BaseScheduler(size_t nSize)
+BaseScheduler::BaseScheduler(uint32_t n_thread, uint32_t n_queue)
 {
-	m_queue = new CMsgQueue<AbsMethodRequest *>(nSize);
+	//激活线程池
+	activate(n_thread);
+	//创建消息队列
+	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
+	
 }
 
 /********************************************************
