@@ -4,7 +4,6 @@
 #define __BGD_METHODREQUEST_H_
 
 #include "threadmgr/bgd_future.h"
-#include "threadmgr/bgd_servant.h"
 
 /*ÃüÁî·½·¨*/
 

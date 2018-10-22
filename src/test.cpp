@@ -5,13 +5,6 @@
 #include <unistd.h>
 #include <vector>
 
-#include "threadmgr/bgd_scheduler.h"
-#include "threadmgr/bgd_servant.h"
-#include "threadmgr/bgd_future.h"
-#include "threadmgr/bgd_observer.h"
-#include "threadmgr/bgd_servant.h"
-#include "threadmgr/bgd_proxy.h"
-
 using namespace std;
 //
 ////2.定义一个仆人
