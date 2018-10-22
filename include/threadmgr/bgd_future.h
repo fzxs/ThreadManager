@@ -190,8 +190,8 @@ void CFuture_Rep<T>::refdetach(CFuture_Rep<T> * &rep)
 	}
 	//自己的锁 锁自己
 	rep->m_mutex->lock();
-	//注意--rep->m_refCount，返回是m_refCount-1之后的值
-	if (0 == --rep->m_refCount)
+	//注意rep->m_refCount--，返回是m_refCount原来的值，当存在一个引用时，那么这次不需要史昂内存
+	if (0 == rep->m_refCount--)
 	{
 		//释放对象前，先把锁解开
 		rep->m_mutex->unlock();
@@ -226,7 +226,7 @@ void CFuture_Rep<T>::assign(CFuture_Rep<T> *&rep, CFuture_Rep<T> *new_rep)
 	//将原来的引用计数器减一，因为已经被替换掉了
 	//自己的锁 锁自己
 	old->m_mutex->lock();
-	if (0 == --old->m_refCount)
+	if (0 == old->m_refCount--)
 	{
 		//释放对象前，先把锁解开
 		old->m_mutex->unlock();
