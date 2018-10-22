@@ -18,10 +18,14 @@ Date Created: 2018-9-15
 *********************************************************/
 BaseScheduler::BaseScheduler(uint32_t n_thread, uint32_t n_queue)
 {
+	//创建消息队列
+	/*
+	--注意必须先创建消息队列再创建线程，因为线程会检查消息队列是否有值
+	加入消息队列不创建，就会出现内存错误
+	*/
+	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
 	//激活线程池
 	activate(n_thread);
-	//创建消息队列
-	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
 	
 }
 
