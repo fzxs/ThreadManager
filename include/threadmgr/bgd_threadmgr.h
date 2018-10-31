@@ -9,7 +9,7 @@
 #include "threadmgr/bgd_descript.h"
 #include "threadmgr/lock.h"
 
-#define MAX_THREAD 256
+#define MAX_THREAD 128
 #define MIN_THREAD 5
 
 /* 线程管理器类 */
