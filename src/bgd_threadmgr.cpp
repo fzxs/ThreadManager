@@ -54,7 +54,7 @@ int CThreadManager::open(uint32_t upperLimit
 	uint32_t task_id = 0;
 	STTaskDescriptor *pstTaskDescriptor = NULL;
 
-	if (0 == upperLimit || 0 == lowerLimit || upperLimit < lowerLimit)
+	if (0 == upperLimit || 0 == lowerLimit || upperLimit < lowerLimit || NULL == userFunc || NULL == task)
 	{
 		return -1;
 	}
@@ -76,7 +76,7 @@ int CThreadManager::open(uint32_t upperLimit
 		pstTaskDescriptor->user_func = userFunc;
 		pstTaskDescriptor->task = task;
 	}
-
+	
 	//加锁保护
 	m_mutex->lock();
 	if (_taskCount >= MAX_TASK_NUMBER)
@@ -89,7 +89,6 @@ int CThreadManager::open(uint32_t upperLimit
 
 	//创建线程组
 	result = spawn_n(lowerLimit, task_id, flag, stack, stack_size, userFunc, task);
-
 	if (result)
 	{
 		return -1;
@@ -210,6 +209,7 @@ int CThreadManager::spawn_n(uint32_t n_threads
 	, FuncUser userFunc 
 	, void *task)
 {
+	int result = 0;
 	uint32_t i = 0;
 	bgd_thread_t threadId;
 	STThreadDescriptor *pstDescriptor = NULL;
@@ -250,6 +250,7 @@ int CThreadManager::spawn_n(uint32_t n_threads
 	{
 		//创建线程组
 		pstGroupDescriptor = new STThreadGroupDescriptor();
+		need_thread = n_threads;
 	}
 	m_mutex->unlock();
 
@@ -259,6 +260,7 @@ int CThreadManager::spawn_n(uint32_t n_threads
 		threadId = spawn_i(flag, stack[i], stack_size[i], userFunc, task);
 		if (threadId < 0)
 		{
+			result = -1;
 			break;
 		}
 		pstDescriptor = new STThreadDescriptor();
@@ -282,7 +284,7 @@ int CThreadManager::spawn_n(uint32_t n_threads
 		m_mutex->unlock();
 	}
 
-	return 0;
+	return result;
 }
 
 /********************************************************

@@ -41,6 +41,7 @@ int AbsTaskBase::open(uint32_t upperLimit, uint32_t lowerLimit, uint32_t step)
 	{
 		m_thrMgr = CThreadManager::instance();
 	}
+
 	//打开线程池
 	stack[0] = NULL;
 	stack_size[0] = 0;

@@ -81,7 +81,7 @@ THR_FUNC_RETURN BaseScheduler::srv(void)
 			//退出当前线程
 			break;
 		}
-		
+
 		//执行任务请求中的方法
 		pclsRequest->call();
 		//释放任务请求
