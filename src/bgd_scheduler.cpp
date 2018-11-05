@@ -11,22 +11,25 @@ BaseScheduler
    Func Name: BaseScheduler
 Date Created: 2018-9-15
  Description: 构造函数
-       Input: 
+       Input:  @max_thread：最大线程数
+			   @n_queue：消息队列数
+			   @strategy：等待策略
       Output: 
       Return: 
      Caution: 
 *********************************************************/
-BaseScheduler::BaseScheduler(uint32_t n_thread, uint32_t n_queue)
+BaseScheduler::BaseScheduler(uint32_t max_thread, uint32_t n_queue)
 {
-	//创建消息队列
+	uint32_t min_thread = 0;
 	/*
 	--注意必须先创建消息队列再创建线程，因为线程会检查消息队列是否有值
-	加入消息队列不创建，就会出现内存错误
+	假如消息队列不创建，就会出现内存错误
 	*/
+	//创建消息队列
 	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
-	//激活线程池
-	activate(n_thread);
-	
+	//打开线程池
+	min_thread = max_thread / 3 == 0 ? 1 : (max_thread / 3);
+	open(max_thread, min_thread, INCREASE_INTERVAL);
 }
 
 /********************************************************
@@ -69,7 +72,7 @@ THR_FUNC_RETURN BaseScheduler::srv(void)
 			//说明请求任务超时
 			//此时说明需要优化线程池，将空闲线程取消
 			printf("request queue is empty , and i quit thread .\n");
-			if (m_thrMgr->adjustReduce())
+			if (m_thrMgr->adjustReduce(_task_no))
 			{
 				printf("i am alive .\n");
 				//此时线程池中的线程已经处于最低状态，不能再退出线程了
@@ -98,17 +101,17 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-int BaseScheduler::addRequest(AbsMethodRequest * request)
+int BaseScheduler::addRequest(AbsMethodRequest * request, long timeout)
 {
 	int result = 0;
 	//1.检测任务请求队列的长度，如果达到临界值，需要再次申请更多的线程
 	if (m_queue->isFull())
 	{
 		printf("request queue is full , and i activate thread .\n");
-		activate(INCREASE_INTERVAL);
+		activate();
 	}
 	//当前队列如果已满，那么超时等待时间
-	result = m_queue->enqueue(request);
+	result = m_queue->enqueue(request, timeout);
 
 	return result;
 }

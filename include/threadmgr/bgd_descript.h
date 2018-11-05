@@ -6,7 +6,8 @@
 #include "threadmgr/bgd_osthread.h"
 #include "threadmgr/bithelper.h"
 
-#include <string>
+#include <stdint.h>
+#include <list>
 
 //线程状态
 enum THREAD_STATUS
@@ -35,56 +36,32 @@ enum THREAD_STATUS
 };
 
 //线程属性
-enum THREAD_FLAG
+typedef enum _THR_FLAG
 {
-	//join
-	THR_JOINING = 0x00000001,
-
-	//detach
-	THR_DETACH = 0x00000002,
-
-	////Thread is active
-	//THR_RUNNING = 0x00000002,
-
-	////hread is suspended.
-	//THR_SUSPENDED = 0x00000004,
-
-	////Thread has been cancelled 
-	//THR_CANCELLED = 0x00000008,
-
-	//// Thread has shutdown, but the slot in the thread manager hasn't
-	//// been reclaimed yet.
-	//THR_TERMINATED = 0x00000010,
-
-	////Join operation has been invoked on the thread by thread manager.
-	//THR_JOINING = 0x00000020
-};
-
-
+	THR_FLAG_JOIN = 0x0,         //可等待线程
+	THR_FLAG_DETACH = 0x1,       //分离线程
+}EN_THR_FLAG;
 
 /* 线程信息类 */
 struct STThreadDescriptor
 {
+	bgd_thread_t threadId;                        //线程ID
+	EN_THR_FLAG flag;                             //线程属性--是否分离，是否join之类
+	void *stack;                                  //线程栈地址
+	uint32_t stack_size;                          //线程栈大小
+	THREAD_STATUS status;                         //线程的状态(idel,runing)
 public:
-	//备注:在windows下threadid是一个结构体，初始化方式不明
-	STThreadDescriptor(int _flag, int _status) :threadId(0), status(_status) 
-	{
-		SET_BITS(flag, _flag);
-	}
-public:
-	bgd_thread_t threadId;                      //线程ID
-	int flag;                                   //线程属性--是否分离，是否join之类
-	int status;                                 //线程的状态(idel,runing)
+	STThreadDescriptor() :threadId(0), flag(THR_FLAG_JOIN), stack(0), stack_size(0), status(THR_IDLE) {}
 };
 
-/* 线程信息头类 */  
-//struct STThreadDescriptorHeader
-//{
-//public:
-//	int priority;                                               //优先级
-//	int groupId;                                                //线程组ID
-//	//TemplateTaskQueue<STThreadDescriptorHeader *> threadGroup;  //线程组队列
-//};
+/* 线程组信息 */  
+struct STThreadGroupDescriptor
+{
+	int priority;                                               //优先级
+	std::list<STThreadDescriptor> thread_list;                  //线程信息
+public:
+	STThreadGroupDescriptor() :priority(0) {}
+};
 
 
 

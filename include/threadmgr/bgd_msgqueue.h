@@ -10,9 +10,23 @@ class CMsgQueue
 public:
 	CMsgQueue(size_t nSize);
 public:
-	int enqueue(T obj, long timeout = 0);
+	/*
+	enqueue
+	@timeout：添加消息策略
+	   0表示消息队列溢出后，直接拒绝;
+	   -1表示消息队列溢出后，一直等待;
+	   >0表示消息队列溢出后，超时等待
+	*/
+	int enqueue(T obj, long timeout);
 
-	int dequeue(T &obj, long timeout = 0);
+	/*
+	dequeue
+	@timeout：获取消息策略
+	   0表示消息队列为空时，直接返回错误;
+	   -1表示消息队列为空时，一直等待任务添加;
+	   >0表示消息队列为空时，超时等待
+	*/
+	int dequeue(T &obj, long timeout);
 
 	int isFull();
 
@@ -126,12 +140,17 @@ int CMsgQueue<T>::waitNotFull(long timeout)
 	{
 		if (0 == timeout)
 		{
-			//一直等待策略
+			result = -1;
+			break;
+		}else if (timeout < 0)
+		{
+			// 一直等待策略
 			m_fullCond->wait();
 		}
 		else
 		{
-			//超时等待策略
+			//超时等待策略 timeout > 0
+			//超时等待是需要退出的，非超时则不需要，因为用户希望永久等待
 			if (m_fullCond->timedwait(timeout))
 			{
 				result = -1;
@@ -146,10 +165,14 @@ template<typename T>
 int CMsgQueue<T>::waitNotEmpty(long timeout)
 {
 	int result = 0;
-	//防止虚假信号
+
 	while (isEmpty())
 	{
 		if (0 == timeout)
+		{
+			result = -1;
+			break;
+		}else if (timeout < 0)
 		{
 			m_emptyCond->wait();
 		}
@@ -163,7 +186,9 @@ int CMsgQueue<T>::waitNotEmpty(long timeout)
 				break;
 			}
 		}
+
 	}
+
 	return result;
 }
 

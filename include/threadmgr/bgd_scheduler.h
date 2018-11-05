@@ -11,7 +11,7 @@
 
 #define INCREASE_INTERVAL 5           //默认线程递增步长
 #define DEFAULT_QUEUE 50              //默认消息队列长度
-#define INITED_THREAD_COUNT 10        //默认初始化线程的个数       
+#define INITED_THREAD_COUNT 30        //默认初始化线程的个数       
 /*
 这个等待时间很有考究，因为如果线程超时等待，便会退出线程，这个退出的时机必须在线程wait之后执行
 */
@@ -24,14 +24,16 @@
 class BaseScheduler:public AbsTaskBase
 {
 public:
-	BaseScheduler(uint32_t n_thread = INITED_THREAD_COUNT, uint32_t n_queue = DEFAULT_QUEUE);
+
+	BaseScheduler(uint32_t max_thread = INITED_THREAD_COUNT
+		, uint32_t n_queue = DEFAULT_QUEUE);
 	virtual ~BaseScheduler();
 public:
 	//执行任务队列
 	virtual THR_FUNC_RETURN srv(void);
 
 	//添加请求
-	int addRequest(AbsMethodRequest * request);
+	int addRequest(AbsMethodRequest * request, long timeout = -1);
 
 private:
 	//禁止拷贝构造函数
