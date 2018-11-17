@@ -82,7 +82,7 @@ public:
 	int detach (AbsFutureObserver<T> *observer);
 
 	//重载=
-	void operator=(const CFuture<T> &r);
+	void operator=(const CFuture<T> &rhs);
 
 private:
 	CFuture_Rep<T> *m_futureRep;
@@ -436,8 +436,11 @@ Date Created: 2018-9-18
      Caution: 
 *********************************************************/
 template<typename T>
-void CFuture<T>::operator=(const CFuture<T> &r)
+void CFuture<T>::operator=(const CFuture<T> &rhs)
 {
+	//如果不在此强转，那么无法调用refAttach方法
+	 CFuture<T> &r = (CFuture<T> &) rhs;
+
 	//右值的引用计数加一
 	//CFuture_Rep<T>::refAttach(r.m_futureRep)
 	//替换本身的引用
