@@ -28,6 +28,7 @@ int CThreadManager::init()
 {
 	//初始化任务列表
 	memset(_taskManager, 0, sizeof(STThreadDescriptor *) * MAX_TASK_NUMBER);
+	_taskCount = 0;
 
 	return 0;
 }
