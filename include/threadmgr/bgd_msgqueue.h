@@ -69,6 +69,7 @@ template<typename T>
 int CMsgQueue<T>::enqueue(T obj, long timeout)
 {
 	m_mutex->lock();
+
 	if (waitNotFull(timeout))
 	{
 		m_mutex->unlock();
@@ -89,7 +90,7 @@ int CMsgQueue<T>::dequeue(T &obj,long timeout)
 {
 	//T obj;
 	m_mutex->lock();
-
+	
 	//判断队列是否为空
 	if (waitNotEmpty(timeout))
 	{
@@ -98,6 +99,7 @@ int CMsgQueue<T>::dequeue(T &obj,long timeout)
 	}
 	obj = m_queue.front();
 	m_queue.pop();
+
 	//通知插入
 	signalEnqueueWaiters();
 	m_curCount--;

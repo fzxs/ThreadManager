@@ -71,10 +71,12 @@ THR_FUNC_RETURN BaseScheduler::srv(void)
 		{
 			//说明请求任务超时
 			//此时说明需要优化线程池，将空闲线程取消
-			printf("request queue is empty , and i quit thread .\n");
+			////--debug
+			//printf("request queue is empty , and i quit thread .\n");
 			if (m_thrMgr->adjustReduce(_task_no))
 			{
-				printf("i am alive .\n");
+				////--debug
+				//printf("i am alive .\n");
 				//此时线程池中的线程已经处于最低状态，不能再退出线程了
 				continue;
 			}
