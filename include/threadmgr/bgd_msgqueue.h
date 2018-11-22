@@ -111,13 +111,25 @@ int CMsgQueue<T>::dequeue(T &obj,long timeout)
 template<typename T>
 int CMsgQueue<T>::isFull()
 {
-	return m_curCount >= m_highWaterMark;
+	int result = 0;
+
+	m_mutex->lock();
+	result = m_curCount >= m_highWaterMark;
+	m_mutex->unlock();
+
+	return result;
 }
 
 template<typename T>
 int CMsgQueue<T>::isEmpty()
 {
-	return 0 == m_curCount;
+	int result = 0;
+
+	m_mutex->lock();
+	result = (0 == m_curCount);
+	m_mutex->unlock();
+
+	return result;
 }
 
 
