@@ -30,13 +30,13 @@ public:
 
 	int isFull();
 
+	int isEmpty();
+
 private:
 
 	int waitNotFull(long timeout);
 
 	int waitNotEmpty(long timeout);
-
-	int isEmpty();
 
 	void signalDequeueWaiters();
 
