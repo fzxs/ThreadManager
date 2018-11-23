@@ -107,7 +107,7 @@ int BaseScheduler::addRequest(AbsMethodRequest * request, long timeout)
 {
 	int result = 0;
 	//1.检测任务请求队列的长度，如果达到临界值，需要再次申请更多的线程
-	if (m_queue->isFull())
+	if (m_queue->full())
 	{
 		printf("request queue is full , and i activate thread .\n");
 		activate();

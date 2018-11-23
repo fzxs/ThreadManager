@@ -28,11 +28,14 @@ public:
 	*/
 	int dequeue(T &obj, long timeout);
 
+	bool full();
+
+	bool empty();
+
+private:
 	int isFull();
 
 	int isEmpty();
-
-private:
 
 	int waitNotFull(long timeout);
 
@@ -109,7 +112,7 @@ int CMsgQueue<T>::dequeue(T &obj,long timeout)
 }
 
 template<typename T>
-int CMsgQueue<T>::isFull()
+inline bool CMsgQueue<T>::full()
 {
 	int result = 0;
 
@@ -121,7 +124,17 @@ int CMsgQueue<T>::isFull()
 }
 
 template<typename T>
-int CMsgQueue<T>::isEmpty()
+inline int CMsgQueue<T>::isFull()
+{
+	int result = 0;
+
+	result = m_curCount >= m_highWaterMark;
+
+	return result;
+}
+
+template<typename T>
+inline bool CMsgQueue<T>::empty()
 {
 	int result = 0;
 
@@ -132,6 +145,15 @@ int CMsgQueue<T>::isEmpty()
 	return result;
 }
 
+template<typename T>
+inline int CMsgQueue<T>::isEmpty()
+{
+	int result = 0;
+
+	result = (0 == m_curCount);
+
+	return result;
+}
 
 template<typename T>
 void CMsgQueue<T>::signalDequeueWaiters()
