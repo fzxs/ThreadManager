@@ -190,7 +190,11 @@ void CFuture_Rep<T>::refdetach(CFuture_Rep<T> * &rep)
 	}
 	//自己的锁 锁自己
 	rep->m_mutex->lock();
-	//注意rep->m_refCount--，返回是m_refCount原来的值，当存在一个引用时，那么这次不需要史昂内存
+	/*
+	    注意rep->m_refCount--，返回是m_refCount减一之前的值
+	因为CFuture_Rep<T>创建的时候是从0开始的，当m_refCount等于0时，实际上还有一个引用的，
+	所以当m_refCount等于1时，不能释放内存
+	*/
 	if (0 == rep->m_refCount--)
 	{
 		//释放对象前，先把锁解开
