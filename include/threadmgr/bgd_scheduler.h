@@ -24,16 +24,21 @@
 class BaseScheduler:public AbsTaskBase
 {
 public:
-
-	BaseScheduler(uint32_t max_thread = INITED_THREAD_COUNT
-		, uint32_t n_queue = DEFAULT_QUEUE);
 	virtual ~BaseScheduler();
+
 public:
+	//初始化
+	int open(uint32_t max_thread = INITED_THREAD_COUNT, uint32_t n_queue = DEFAULT_QUEUE);
+
 	//执行任务队列
 	virtual THR_FUNC_RETURN srv(void);
 
 	//添加请求
 	int addRequest(AbsMethodRequest * request, long timeout = -1);
+
+protected:
+	//不可以实例化
+	BaseScheduler();
 
 private:
 	//禁止拷贝构造函数

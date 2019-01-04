@@ -18,18 +18,8 @@ Date Created: 2018-9-15
       Return: 
      Caution: 
 *********************************************************/
-BaseScheduler::BaseScheduler(uint32_t max_thread, uint32_t n_queue)
+BaseScheduler::BaseScheduler()
 {
-	uint32_t min_thread = 0;
-	/*
-	--注意必须先创建消息队列再创建线程，因为线程会检查消息队列是否有值
-	假如消息队列不创建，就会出现内存错误
-	*/
-	//创建消息队列
-	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
-	//打开线程池
-	min_thread = max_thread / 3 == 0 ? 1 : (max_thread / 3);
-	open(max_thread, min_thread, INCREASE_INTERVAL);
 }
 
 /********************************************************
@@ -46,6 +36,36 @@ BaseScheduler::~BaseScheduler()
 	delete m_queue;
 	m_queue = NULL;
 }
+
+
+/********************************************************
+   Func Name: open
+Date Created: 2019-1-4
+ Description: 初始化
+       Input:  @max_thread：最大线程数
+			   @n_queue：消息队列数
+			   @strategy：等待策略
+      Output: 
+      Return: 
+     Caution: 
+*********************************************************/
+int BaseScheduler::open(uint32_t max_thread, uint32_t n_queue)
+{
+	int result = 0;
+	uint32_t min_thread = 0;
+	/*
+	--注意必须先创建消息队列再创建线程，因为线程会检查消息队列是否有值
+	假如消息队列不创建，就会出现内存错误
+	*/
+	//创建消息队列
+	m_queue = new CMsgQueue<AbsMethodRequest *>(n_queue);
+	//打开线程池
+	min_thread = max_thread / 3 == 0 ? 1 : (max_thread / 3);
+	result = AbsTaskBase::open(max_thread, min_thread, INCREASE_INTERVAL);
+
+	return result;
+}
+
 
 /********************************************************
    Func Name: srv

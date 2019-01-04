@@ -12,8 +12,8 @@
 class AbsTaskBase
 {
 public:
-	AbsTaskBase(CThreadManager * = 0);
 	virtual ~AbsTaskBase(void) {};
+
 public:
 	//用户业务处理方法
 	virtual THR_FUNC_RETURN srv(void);
@@ -25,12 +25,15 @@ public:
 	virtual int activate();
 
 public:
-
 	//函数指针运行方法--非static无法当做函数指针传递
 	static THR_FUNC_RETURN srvRun(void *);
 
 	//获取线程管理器
 	CThreadManager *getThreadManager(void);
+
+protected:
+	//禁止实例化
+	AbsTaskBase(CThreadManager * = 0);
 
 protected:
 	CThreadManager *m_thrMgr;             //线程管理器指针
